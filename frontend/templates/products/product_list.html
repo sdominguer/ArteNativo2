@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- Título de la sección centrado -->
+    <h2 class="text-center">Lista de Productos</h2>
+    
+    <!-- Enlace para agregar un nuevo producto centrado -->
+    <div class="text-center mb-3">
+        <a href="{% url 'product_create' %}" class="btn btn-success">Agregar nuevo producto</a>
+    </div>
+    
+    <!-- Lista de productos -->
+    <ul class="list-group">
+        {% for product in products %}
+            <li class="list-group-item mb-4">
+                <div class="d-flex">
+                    <!-- Imagen del producto con espaciado y tamaño cuadrado -->
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail mr-3" style="width: 200px; height: 200px; object-fit: cover;">
+                    
+                    <div class="ml-3">
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description }}</p>
+                        <p>Precio: ${{ product.price }}</p>
+                        
+                        <!-- Enlaces de acciones para cada producto organizados en la misma fila -->
+                        <div class="d-flex flex-wrap mb-3">
+                            <a href="{% url 'product_update' product.pk %}" class="btn btn-warning btn-sm btn-spacing">Editar</a>
+                            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger btn-sm btn-spacing">Eliminar</a>
+                            <a href="{% url 'auction_create' product.pk %}" class="btn btn-info btn-sm btn-spacing">Iniciar subasta</a>
+                            <a href="{% url 'add_to_cart' product.pk %}" class="btn btn-primary btn-sm btn-spacing">Agregar al carrito</a>
+                            <button class="btn btn-secondary btn-sm btn-spacing" type="button" data-toggle="collapse" data-target="#comments-{{ product.id }}" aria-expanded="false" aria-controls="comments-{{ product.id }}">
+                                Mostrar Comentarios
+                            </button>
+                        </div>
+
+                        <!-- Sección colapsable de comentarios -->
+                        <div class="collapse" id="comments-{{ product.id }}">
+                            <ul class="list-group mt-3">
+                                {% for comment in product.comments.all %}
+                                    <li class="list-group-item">
+                                        <p><strong>{{ comment.user.username }}:</strong> {{ comment.content }}</p>
+                                        <p>
+                                            <!-- Mostrar estrellas según la calificación -->
+                                            {% for i in "12345"|slice:":comment.rating" %}
+                                                <span class="fa fa-star checked"></span>
+                                            {% endfor %}
+                                            {% for i in "12345"|slice:":5-comment.rating" %}
+                                                <span class="fa fa-star"></span>
+                                            {% endfor %}
+                                        </p>
+                                        <p><small>{{ comment.created_at }}</small></p>
+                                    </li>
+                                {% empty %}
+                                    <li class="list-group-item">No hay comentarios</li>
+                                {% endfor %}
+                            </ul>
+
+                            <!-- Formulario para agregar un comentario -->
+                            {% if user.is_authenticated %}
+                                <form method="POST" class="mt-3">
+                                    {% csrf_token %}
+                                    {{ comment_form.as_p }}
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Agregar comentario</button>
+                                </form>
+                            {% else %}
+                                <p class="mt-2">Inicia sesión para dejar un comentario</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

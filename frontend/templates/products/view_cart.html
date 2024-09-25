@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Tu Carrito</h1>
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.price_at_purchase }} 
+                <form method="post" action="{% url 'update_cart_item' item.id %}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                    <button type="submit">Actualizar</button>
+                </form>
+                <form method="post" action="{% url 'remove_cart_item' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>No hay productos en tu carrito.</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

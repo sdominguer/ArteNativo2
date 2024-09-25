@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce</title>
+    {% load static %}
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'static/css/base.css' %}">
+    <style>
+        /* Estilos personalizados para los colores */
+        body {
+            background-color: #f5f5dc; /* Beige claro */
+            background-image: url("{% static 'images/fondo (5).jpg' %}");
+            background-size: cover; /* Cubrir toda la pantalla */
+            background-position: center; /* Centrar la imagen */
+            background-repeat: no-repeat; /* No repetir la imagen */
+        }
+        header {
+            background-color: rgb(216, 133, 63); /* Café/naranja oscuro con transparencia */
+        }
+        .nav-link {
+            color: #fff !important; /* Enlaces en blanco */
+        }
+        .nav-link:hover {
+            background-color: rgba(223, 207, 153, 0.8) !important; /* Fondo naranja claro al pasar el cursor */
+            color: rgb(224,180,74) !important;
+        }
+        h1 {
+            font-family: 'Dancing Script', cursive; /* Aplicar la fuente */
+            font-size: 4rem; /* Tamaño de fuente más grande */
+            color: white; /* Color blanco */
+        }
+        .container-main {
+            background-color: rgba(255, 248, 220, 0.7); /* Beige más claro con mayor transparencia */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100vw; /* Ancho completo de la ventana */
+            margin-left: calc(-50vw + 50%); /* Centrar el contenedor en la ventana */
+        }
+        footer {
+            background-color: rgba(216, 133, 63, 0.8); /* Café claro con transparencia */
+            color: white;
+        }
+        .btn, button {
+            background-color: rgb(224,180,74) !important; /* Café/naranja oscuro */
+            color: white !important;
+            border: none !important;
+        }
+        .btn:hover, button:hover {
+            background-color: #ffdead !important; /* Naranja claro */
+            color: rgb(216, 133, 63) !important;
+        }
+        a {
+            color: rgb(216, 133, 63) !important; /* Café/naranja oscuro */
+        }
+        a:hover {
+            color: #ffdead !important; /* Naranja claro */
+            text-decoration: underline !important;
+        }
+        .btn-spacing {
+            margin-right: 10px; /* Espacio entre botones */
+        }
+    </style>
+</head>
+<body>
+    <header class="py-3">
+        <div class="container">
+            <h1 class="text-center">ArteNativo</h1>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'product_list' %}">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'auction_list' %}">Subastas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'view_cart' %}">Carrito</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-4">
+        <div class="container-main">
+            {% block content %}
+            <button class="btn">Mostrar Comentarios</button>
+            {% endblock %}
+        </div>
+    </div>
+
+    <footer class="text-center py-3">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Mi Ecommerce</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
