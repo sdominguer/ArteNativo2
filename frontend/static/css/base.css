@@ -1,43 +1,63 @@
 body {
-    font-family: Arial, sans-serif;
+    background-color: #f5f5dc; /* Beige claro */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 header {
-    background-color: #4CAF50;
+    background-color: rgb(216, 133, 63);
+}
+
+.nav-link {
+    color: #fff !important;
+}
+
+.nav-link:hover {
+    background-color: rgba(223, 207, 153, 0.8);
+    color: rgb(224,180,74) !important;
+}
+
+h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 4rem;
     color: white;
-    padding: 10px 0;
-    text-align: center;
 }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-
-.container {
-    margin: 20px;
+.container-main {
+    background-color: rgba(255, 248, 220, 0.7);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
 }
 
 footer {
-    text-align: center;
-    margin-top: 20px;
+    background-color: rgba(216, 133, 63, 0.8);
+    color: white;
 }
 
-.checked {
-    color: orange;
+.btn, button {
+    background-color: rgb(224,180,74) !important;
+    color: white !important;
+    border: none !important;
 }
 
-.fa-star {
-    font-size: 20px;
+.btn:hover, button:hover {
+    background-color: #ffdead !important;
+    color: rgb(216, 133, 63) !important;
 }
 
+a {
+    color: rgb(216, 133, 63) !important;
+}
+
+a:hover {
+    color: #ffdead !important;
+    text-decoration: underline !important;
+}
+
+.btn-spacing {
+    margin-right: 10px;
+}

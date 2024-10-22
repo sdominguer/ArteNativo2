@@ -10,6 +10,14 @@
         <a href="{% url 'product_create' %}" class="btn btn-success">Agregar nuevo producto</a>
     </div>
     
+    <!-- Formulario de búsqueda -->
+    <div class="text-center mb-4">
+        <form method="GET" action="{% url 'search' %}">
+            <input type="text" name="q" placeholder="Buscar productos..." required>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
     <!-- Lista de productos -->
     <ul class="list-group">
         {% for product in products %}

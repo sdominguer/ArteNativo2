@@ -11,12 +11,13 @@ from django.contrib.auth.forms import AuthenticationForm
 #--------------------------------------------------- Productos ------------------------------------------------------------------
 
 def home(request):
-    return redirect('product_list')
+    return render(request, 'home.html')
 
-# Listar productos
-def product_list(request):
-    products = Product.objects.all()
-    return render(request, 'products/product_list.html', {'products': products})
+# views.py
+def search_product(request):
+    query = request.GET.get('q')
+    products = Product.objects.filter(name__icontains=query) if query else []
+    return render(request, 'products/search_results.html', {'products': products, 'query': query})
 
 # Crear producto
 def product_create(request):
@@ -158,3 +159,4 @@ def product_list(request):
         'products': products,
         'comment_form': comment_form
     })
+
