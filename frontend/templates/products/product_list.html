@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
     <!-- Título de la sección centrado -->
     <h2 class="text-center">Lista de Productos</h2>
-    
+
     <!-- Enlace para agregar un nuevo producto centrado -->
     <div class="text-center mb-3">
         <a href="{% url 'product_create' %}" class="btn btn-success">Agregar nuevo producto</a>
     </div>
-    
+
     <!-- Formulario de búsqueda -->
     <div class="text-center mb-4">
         <form method="GET" action="{% url 'search' %}">
@@ -18,68 +17,51 @@
         </form>
     </div>
 
-    <!-- Lista de productos -->
-    <ul class="list-group">
-        {% for product in products %}
-            <li class="list-group-item mb-4">
-                <div class="d-flex">
-                    <!-- Imagen del producto con espaciado y tamaño cuadrado -->
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail mr-3" style="width: 200px; height: 200px; object-fit: cover;">
-                    
-                    <div class="ml-3">
-                        <h3>{{ product.name }}</h3>
-                        <p>{{ product.description }}</p>
-                        <p>Precio: ${{ product.price }}</p>
-                        
-                        <!-- Enlaces de acciones para cada producto organizados en la misma fila -->
-                        <div class="d-flex flex-wrap mb-3">
-                            <a href="{% url 'product_update' product.pk %}" class="btn btn-warning btn-sm btn-spacing">Editar</a>
-                            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger btn-sm btn-spacing">Eliminar</a>
-                            <a href="{% url 'auction_create' product.pk %}" class="btn btn-info btn-sm btn-spacing">Iniciar subasta</a>
-                            <a href="{% url 'add_to_cart' product.pk %}" class="btn btn-primary btn-sm btn-spacing">Agregar al carrito</a>
-                            <button class="btn btn-secondary btn-sm btn-spacing" type="button" data-toggle="collapse" data-target="#comments-{{ product.id }}" aria-expanded="false" aria-controls="comments-{{ product.id }}">
-                                Mostrar Comentarios
-                            </button>
-                        </div>
+    <!-- Contenedor donde se cargarán los productos dinámicamente -->
+    <ul id="product-list" class="list-group"></ul>
 
-                        <!-- Sección colapsable de comentarios -->
-                        <div class="collapse" id="comments-{{ product.id }}">
-                            <ul class="list-group mt-3">
-                                {% for comment in product.comments.all %}
-                                    <li class="list-group-item">
-                                        <p><strong>{{ comment.user.username }}:</strong> {{ comment.content }}</p>
-                                        <p>
-                                            <!-- Mostrar estrellas según la calificación -->
-                                            {% for i in "12345"|slice:":comment.rating" %}
-                                                <span class="fa fa-star checked"></span>
-                                            {% endfor %}
-                                            {% for i in "12345"|slice:":5-comment.rating" %}
-                                                <span class="fa fa-star"></span>
-                                            {% endfor %}
-                                        </p>
-                                        <p><small>{{ comment.created_at }}</small></p>
-                                    </li>
-                                {% empty %}
-                                    <li class="list-group-item">No hay comentarios</li>
-                                {% endfor %}
-                            </ul>
+    <!-- Script para cargar los productos desde el archivo JSON -->
+    <script>
+        // Llamada al endpoint JSON
+        fetch("{% url 'product_list_json' %}")
+            .then(response => response.json())
+            .then(data => {
+                const productList = document.getElementById('product-list');
 
-                            <!-- Formulario para agregar un comentario -->
-                            {% if user.is_authenticated %}
-                                <form method="POST" class="mt-3">
-                                    {% csrf_token %}
-                                    {{ comment_form.as_p }}
-                                    <input type="hidden" name="product_id" value="{{ product.id }}">
-                                    <button type="submit" class="btn btn-primary btn-sm">Agregar comentario</button>
-                                </form>
-                            {% else %}
-                                <p class="mt-2">Inicia sesión para dejar un comentario</p>
-                            {% endif %}
+                // Limpiar el contenedor antes de cargar los productos
+                productList.innerHTML = '';
+
+                // Recorrer los productos y crear los elementos del DOM
+                data.products.forEach(product => {
+                    // Crear el elemento del producto
+                    const productItem = document.createElement('li');
+                    productItem.classList.add('list-group-item', 'mb-4');
+
+                    // Estructura HTML del producto
+                    productItem.innerHTML = `
+                        <div class="d-flex">
+                            <img src="${product.image_url}" alt="${product.name}" class="img-thumbnail mr-3" style="width: 200px; height: 200px; object-fit: cover;">
+                            <div class="ml-3">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <p>Precio: $${product.price}</p>
+                                <div class="d-flex flex-wrap mb-3">
+                                    <a href="/products/${product.id}/edit/" class="btn btn-warning btn-sm btn-spacing">Editar</a>
+                                    <a href="/products/${product.id}/delete/" class="btn btn-danger btn-sm btn-spacing">Eliminar</a>
+                                    <a href="/auctions/${product.id}/create/" class="btn btn-info btn-sm btn-spacing">Iniciar subasta</a>
+                                    <a href="/cart/add/${product.id}/" class="btn btn-primary btn-sm btn-spacing">Agregar al carrito</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+                    `;
+
+                    // Agregar el producto a la lista
+                    productList.appendChild(productItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar los productos:', error);
+            });
+    </script>
 
 {% endblock %}

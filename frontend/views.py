@@ -13,6 +13,27 @@ from django.contrib.auth.forms import AuthenticationForm
 def home(request):
     return render(request, 'home.html')
 
+from django.http import JsonResponse
+from .models import Product
+
+# Vista para devolver la lista de productos en formato JSON
+def product_list_json(request):
+    products = Product.objects.all()
+
+    # Convertir los productos a formato JSON
+    data = []
+    for product in products:
+        data.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'image_url': product.image.url if product.image else None,
+        })
+    
+    return JsonResponse({'products': data})
+
+
 # views.py
 def search_product(request):
     query = request.GET.get('q')
